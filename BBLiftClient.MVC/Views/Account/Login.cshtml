@@ -1,0 +1,93 @@
+@using System.ComponentModel.DataAnnotations
+@model BBLiftClient.Application.Dtos.SignInRequest
+@{
+    ViewData["Title"] = "Sisteme Giriş Yap";
+}
+
+<div class="relative w-full max-w-7xl mx-auto px-gutter py-space-xl min-h-screen overflow-x-hidden mt-8">
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-primary-container/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-32 w-80 h-80 bg-secondary/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+    <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center pb-12">
+        
+        <div class="lg:col-span-6 flex flex-col gap-space-lg">
+            
+            <div class="flex flex-col gap-space-xs">
+                <div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-high w-fit shadow-sm">
+                    <span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span class="font-label-badge text-label-badge text-primary uppercase tracking-widest">BBLift Kimlik Doğrulama</span>
+                </div>
+                <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight mt-space-xs">
+                    Performans Motoruna<br/> <span class="text-primary font-extrabold">Giriş Yap</span>
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                    Rutinlerine, antrenman geçmişine ve profiline erişmek için giriş yap.                </p>
+            </div>
+            
+            
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="p-space-sm bg-error-container text-on-error-container rounded-lg font-body-sm text-body-sm">
+                    <div asp-validation-summary="All" class="text-error font-bold"></div>
+                </div>
+            }
+
+            <form asp-controller="Account" asp-action="Login" method="post" class="w-full">
+                <div class="flex flex-col gap-4">
+                    
+                    <div class="flex flex-col gap-1.5">
+                        <label asp-for="Email" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                            <span>E-Posta Adresi veya Kullanıcı Adı</span>
+                            <span class="material-symbols-outlined text-xs text-outline">person</span>
+                        </label>
+                        <div class="relative">
+                            <input asp-for="Email" type="text" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" placeholder="E-posta adresini girin..." required="required" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-error text-xs mt-1"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5 mt-2">
+                        <label asp-for="Password" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                            <span>Şifre</span>
+                            <a href="/Account/ForgotPassword" class="text-primary text-xs hover:underline transition-colors">Şifremi Unuttum</a>
+                        </label>
+                        <div class="relative">
+                            <input asp-for="Password" type="password" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" placeholder="••••••••" required="required" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-error text-xs mt-1"></span>
+                    </div>
+
+                    <!-- Giriş Yap Butonu -->
+                    <button type="submit" class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold tracking-wide transition-all duration-200 active:scale-95 hover:brightness-110 mt-4 flex items-center justify-center gap-2">
+                        SİSTEME GİRİŞ YAP
+                        <span class="material-symbols-outlined text-sm">login</span>
+                    </button>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="hidden lg:flex lg:col-span-6 relative h-full min-h-[600px] rounded-2xl overflow-hidden shadow-2xl">
+            <div class="absolute inset-0 bg-surface-container-highest">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHXbZzW-t0B4V9a5uK70wLz05mHntmO-L7o_e2hFh5GfW8xV9c5L3T7e4Wz8s6k3M3Z_M0B2T7Y8M0Z8u5e7o9b6a7a5O1Q7L9V3f4X8s6m5M4Y8a2N6D9s3I1v7O6A9s4K3k8M4D8w6s2N5F0M5N7K0Z6B7v5a8X7q8a1K2I2G8u3S6f8O9w3V2O4D0s1G7Y0M8o4Z5B8K5W2x1R9a7v8K7O0f6k3R6k1a7A8M2V7g8A5M0" 
+                     class="w-full h-full object-cover opacity-80 mix-blend-luminosity filter contrast-125" alt="Gym" />
+                <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/20 to-transparent"></div>
+            </div>
+            
+            <div class="absolute bottom-10 left-10 right-10 flex flex-col gap-3">
+                <div class="px-3 py-1.5 rounded-lg bg-surface-container-lowest/80 backdrop-blur-md shadow-md w-fit flex items-center gap-2 border border-white/10">
+                    <span class="material-symbols-outlined text-sm text-primary">verified</span>
+                    <span class="font-label-ui text-[11px] uppercase tracking-widest text-on-surface">BBLift</span>
+                </div>
+                <h2 class="font-headline-lg text-3xl text-on-surface font-extrabold leading-tight">
+                    Antrenmanını planla.<br/> <span class="text-on-surface-variant font-normal">Her seti kaydet.</span>                </h2>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

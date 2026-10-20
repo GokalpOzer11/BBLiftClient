@@ -1,0 +1,138 @@
+@model IEnumerable<BBLiftClient.Application.Dtos.WorkoutSessionResponse>
+@{
+    ViewData["Title"] = "Tüm Antrenman Seansları";
+    Layout = "_Layout";
+    var routineNames = (ViewBag.RoutineNames as Dictionary<Guid, string>) ?? new Dictionary<Guid, string>();
+}
+
+<div class="flex flex-col w-full min-h-screen pb-32">
+    <div class="relative w-full overflow-hidden">
+        <div class="absolute -top-40 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[140px] pointer-events-none"></div>
+        <div class="absolute top-96 left-10 w-[350px] h-[350px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-[1440px] w-full mx-auto px-margin-mobile md:px-margin py-space-lg flex flex-col gap-space-lg relative z-10">
+            
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mt-8">
+                <div class="flex flex-col gap-space-xs">
+                    <div class="flex items-center gap-space-xs">
+                        <span class="inline-flex items-center px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-badge text-label-badge uppercase tracking-wider">
+                            <span class="material-symbols-outlined text-[14px] mr-1">history</span> Antrenman Geçmişi
+                        </span>
+                    </div>
+                    <h1 class="font-headline-xl text-headline-xl tracking-tight text-on-surface">Tüm Antrenman Seansları</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                         Tamamlanan tüm antrenman günlükleri, toplam tonaj, set verileri ve biyomekanik performans geçmişiniz.
+                    </p>
+                </div>
+                
+                <div class="flex items-center gap-space-sm self-start lg:self-auto">
+                    <a asp-controller="WorkoutSession" asp-action="StartQuick" class="flex items-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-primary-container text-on-primary-container hover:bg-primary font-label-ui text-label-ui font-bold shadow-[0_0_24px_rgba(16,185,129,0.35)] transition-all duration-200 active:scale-95">
+                        <span class="material-symbols-outlined text-[20px]">add</span> Yeni Antrenman Başlat
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+                <div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between relative overflow-hidden group hover:bg-surface-container transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-ui text-label-ui uppercase tracking-wider text-on-surface-variant">Tamamlanan Seans</span>
+                        <span class="material-symbols-outlined text-primary text-[22px]">exercise</span>
+                    </div>
+                    <div class="mt-space-md">
+                        <div class="font-label-numeric-stat text-label-numeric-stat text-on-surface tracking-tight">@Model.Count() <span class="font-headline-sm text-headline-sm text-on-surface-variant font-normal">Seans</span></div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-transparent"></div>
+                </div>
+                
+                <div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between relative overflow-hidden group hover:bg-surface-container transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-ui text-label-ui uppercase tracking-wider text-on-surface-variant">Durum</span>
+                        <span class="material-symbols-outlined text-secondary text-[22px]">fitness_center</span>
+                    </div>
+                    <div class="mt-space-md">
+                        <div class="font-label-numeric-stat text-label-numeric-stat text-on-surface tracking-tight">Aktif <span class="font-headline-sm text-headline-sm text-secondary font-normal">Kayıt</span></div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary to-transparent"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start mt-4">
+                <div class="lg:col-span-8 flex flex-col gap-space-md">
+                    
+                    @if (!Model.Any())
+                    {
+                        <div class="w-full py-20 rounded-2xl bg-surface-container-low/50 border border-white/5 flex flex-col items-center justify-center text-center">
+                            <span class="material-symbols-outlined text-[48px] text-outline mb-4">sentiment_dissatisfied</span>
+                            <h3 class="font-headline-sm text-on-surface font-bold">Henüz hiç antrenman yapmadın</h3>
+                            <p class="text-on-surface-variant font-body-sm mt-2 mb-6">İlk serbest antrenmanını başlatarak gelişimi kaydetmeye başla.</p>
+                            <a asp-controller="WorkoutSession" asp-action="StartQuick" class="px-space-md py-2 rounded-lg bg-primary text-on-primary font-bold">Hemen Başlat</a>
+                        </div>
+                    }
+
+                    @foreach (var session in Model)
+                    {
+                        var isCompleted = session.Status == BBLiftClient.Application.Enums.WorkoutStatus.Completed;
+                        var durationStr = session.EndTime.HasValue ? $"{(session.EndTime.Value - session.StartTime).TotalMinutes:F0} dk" : "Aktif";
+                        string? routineName = session.RoutineId.HasValue && routineNames.TryGetValue(session.RoutineId.Value, out var rn) ? rn : null;
+                        var sessionTitle = !string.IsNullOrWhiteSpace(session.Name)
+                            ? session.Name
+                            : (routineName ?? (session.RoutineId.HasValue ? "Planlı Rutin Antrenmanı" : "Serbest Antrenman"));                        
+                        <article class="p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container shadow-md transition-all duration-300 flex flex-col gap-space-md relative overflow-hidden border border-white/5">
+                            @if (isCompleted)
+                            {
+                                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary"></div>
+                            }
+                            
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-xs">
+                                <div>
+                                    <div class="flex items-center gap-space-xs flex-wrap">
+                                        <span class="px-space-sm py-0.5 rounded-full bg-primary/20 text-primary font-label-badge text-label-badge uppercase tracking-wider">
+                                            @(session.RoutineId.HasValue ? (routineName != null && routineName != sessionTitle ? "Rutin: " + routineName : "Rutin") : "Serbest")                                        </span>
+                                        <span class="px-space-sm py-0.5 rounded-full bg-surface-container-highest @(isCompleted ? "text-primary" : "text-secondary") font-label-badge text-label-badge uppercase tracking-wider flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[13px]">@(isCompleted ? "check_circle" : "pending_actions")</span> @(isCompleted ? "Tamamlandı" : "Yarım Kaldı")
+                                        </span>
+                                    </div>
+                                    <h2 class="font-headline-md text-headline-md text-on-surface mt-space-xs">@sessionTitle</h2>
+                                    <div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+                                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                        <span>@session.StartTime.ToLocalTime().ToString("dd MMMM yyyy - HH:mm") (@durationStr)</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-space-xs self-start md:self-center">
+                                    <a asp-controller="WorkoutSession" asp-action="Detail" asp-route-id="@session.Id" class="px-space-md py-space-xs rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-ui text-label-ui transition-all flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px]">visibility</span> Seans Detayı
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-xs p-space-sm rounded-lg bg-surface-container-lowest border border-white/5">
+                                <div class="flex flex-col px-space-sm py-1">
+                                    <span class="text-on-surface-variant font-label-badge text-label-badge uppercase">Durum</span>
+                                    <span class="font-headline-sm text-headline-sm text-on-surface font-bold">@session.Status</span>
+                                </div>
+                                <div class="flex flex-col px-space-sm py-1">
+                                    <span class="text-on-surface-variant font-label-badge text-label-badge uppercase">Başlangıç</span>
+                                    <span class="font-headline-sm text-headline-sm text-on-surface font-bold">@session.StartTime.ToLocalTime().ToString("HH:mm")</span>
+                                </div>
+                                <div class="flex flex-col px-space-sm py-1">
+                                    <span class="text-on-surface-variant font-label-badge text-label-badge uppercase">Bitiş</span>
+                                    <span class="font-headline-sm text-headline-sm text-on-surface font-bold">@(session.EndTime?.ToLocalTime().ToString("HH:mm") ?? "-")</span>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+
+                <aside class="lg:col-span-4 flex flex-col gap-space-md sticky top-24">
+                    <div class="bg-surface-container rounded-xl p-space-lg shadow-xl border border-white/5">
+                        <div class="flex items-center gap-space-xs mb-space-sm">
+                            <span class="material-symbols-outlined text-primary text-[22px]">auto_graph</span>
+                            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">Analizler</span>
+                        </div>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">Antrenman loglarınız backend tarafında başarıyla tutuluyor. Gelişimi koruyun!</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</div>

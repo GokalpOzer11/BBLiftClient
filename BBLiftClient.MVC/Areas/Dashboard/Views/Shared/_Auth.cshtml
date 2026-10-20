@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4">
+    <div class="container-fluid">
+        <h4 class="mb-0">
+            @ViewBag.Title
+        </h4>
+
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <a href="/" class="btn btn-light">
+                <i class="bi bi-house"></i>
+                Siteye Dön
+            </a>
+            <span class="btn btn-light disabled">
+                <i class="bi bi-person-circle"></i>
+                @User.Identity?.Name
+            </span>
+            <a asp-area=""
+               asp-controller="Account"
+               asp-action="Logout"
+               class="btn btn-light">
+                <i class="bi bi-door-closed"></i>
+                Çıkış
+            </a>
+        </div>
+    </div>
+</nav>

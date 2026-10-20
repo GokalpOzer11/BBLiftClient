@@ -1,0 +1,159 @@
+@{
+    var current = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
+    string Active(string name) =>
+        string.Equals(current, name, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>BBLift Yönetim - @ViewBag.Title</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #111319;
+            color: #fff;
+        }
+
+        .sidebar .logo {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .sidebar .logo span {
+            color: #10b981;
+        }
+
+        .sidebar a {
+            color: #adb5bd;
+            display: block;
+            padding: 14px 22px;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .sidebar a:hover {
+            background: #1e1f26;
+            color: #fff;
+        }
+
+        .sidebar a.active {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .content {
+            margin-left: 260px;
+        }
+
+        .navbar {
+            height: 70px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+
+        <div class="logo">
+            BB<span>LIFT</span>&nbsp;Yönetim
+        </div>
+
+        <a class="@Active("Home")" asp-area="Dashboard" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-speedometer2 me-2"></i>
+            Panel
+        </a>
+
+        <a class="@Active("Exercises")" asp-area="Dashboard" asp-controller="Exercises" asp-action="Index">
+            <i class="bi bi-lightning-charge me-2"></i>
+            Egzersizler
+        </a>
+
+        <a class="@Active("MuscleGroups")" asp-area="Dashboard" asp-controller="MuscleGroups" asp-action="Index">
+            <i class="bi bi-person-arms-up me-2"></i>
+            Kas Grupları
+        </a>
+
+        <a class="@Active("Equipments")" asp-area="Dashboard" asp-controller="Equipments" asp-action="Index">
+            <i class="bi bi-tools me-2"></i>
+            Ekipmanlar
+        </a>
+
+        <a class="@Active("MembershipPackages")" asp-area="Dashboard" asp-controller="MembershipPackages" asp-action="Index">
+            <i class="bi bi-award me-2"></i>
+            Üyelik Paketleri
+        </a>
+        @if (User.IsInRole("SuperAdmin"))
+        {
+            <a class="@Active("Users")" asp-area="Dashboard" asp-controller="Users" asp-action="Index">
+                <i class="bi bi-people me-2"></i>
+                Kullanıcılar
+            </a>
+        }
+    </div>
+
+    <div class="content">
+        <partial name="_Auth" />
+
+        @if (TempData["SuccessMessage"] is string successMessage)
+        {
+            <div class="alert alert-success alert-dismissible fade show mx-4 mt-4 mb-0" role="alert">
+                @successMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] is string errorMessage)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mx-4 mt-4 mb-0" role="alert">
+                @errorMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

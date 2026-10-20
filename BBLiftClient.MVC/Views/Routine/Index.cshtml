@@ -1,0 +1,276 @@
+@model IEnumerable<BBLiftClient.Application.Dtos.RoutineResponse>
+@{
+    ViewData["Title"] = "Antrenman Rutinlerim";
+    Layout = "_Layout";
+}
+
+<div class="flex flex-col w-full min-h-[calc(100vh-160px)] pb-32">
+    <!-- Arka plan Ambient Glow -->
+    <div class="relative w-full overflow-hidden">
+        <div class="absolute -top-32 left-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 right-10 w-80 h-80 bg-secondary-container/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin py-space-lg w-full relative z-10 mt-4">
+            
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="p-space-sm bg-primary-container/20 border border-primary/30 rounded-lg flex items-center gap-3 shadow-md mb-4">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span class="text-primary font-body-sm font-medium">@TempData["SuccessMessage"]</span>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="p-space-sm bg-error-container/20 border border-error/30 rounded-lg flex items-center gap-3 shadow-md mb-4">
+                    <span class="material-symbols-outlined text-error">error</span>
+                    <span class="text-error font-body-sm font-medium">@TempData["ErrorMessage"]</span>
+                </div>
+            }
+
+            <!-- 1. Top Header Area -->
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md border-b-0 pb-2">
+                <div class="flex flex-col gap-space-xs max-w-2xl">
+                    <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight uppercase">Kayıtlı Rutinlerim</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant">
+                        Oluşturduğunuz antrenman şablonları, PPL döngüleri ve kayıtlı split programlarınız. Tek tıkla canlı seans başlatın veya hedef değerleriyle düzenleyin.
+                    </p>
+                </div>
+                <div class="flex items-center gap-space-sm flex-wrap">
+                    <!-- Ayrı sayfaya yönlendiren buton (Modal kaldırıldı) -->
+                    <a asp-controller="Routine" asp-action="Create" class="px-space-lg py-space-xs rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm uppercase tracking-wider flex items-center gap-space-xs transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_28px_rgba(16,185,129,0.5)] hover:scale-[1.02]">
+                        <span class="material-symbols-outlined text-[20px] font-bold">add</span>
+                        <span class="">Yeni Rutin Oluştur</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. Overview Telemetry Bar (KPI Grid) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md mt-6">
+                <!-- KPI 1 -->
+                <div class="p-space-md rounded-xl bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden group hover:border-primary/40 transition-all">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:bg-primary/10 transition-all"></div>
+                    <div class="flex items-center justify-between text-on-surface-variant">
+                        <span class="font-label-ui text-label-ui uppercase tracking-wider">Toplam Program</span>
+                        <span class="material-symbols-outlined text-[20px] text-primary">view_agenda</span>
+                    </div>
+                    <div class="mt-space-sm">
+                        <div class="font-headline-lg text-headline-lg text-on-surface tracking-tight">@Model.Count() Aktif Rutin</div>
+                        <div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                            <span class="">Antrenman şablonlarınız</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="p-space-md rounded-xl bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden group hover:border-primary/40 transition-all">
+                    <div class="flex items-center justify-between text-on-surface-variant">
+                        <span class="font-label-ui text-label-ui uppercase tracking-wider">Planlanmış Egzersiz</span>
+                        <span class="material-symbols-outlined text-[20px] text-secondary">fitness_center</span>
+                    </div>
+                    <div class="mt-space-sm">
+                        <div class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+                            @(Model.Sum(r => r.Exercises?.Count() ?? 0)) Hareket
+                        </div>
+                        <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Tüm rutinlerdeki toplam egzersiz</div>
+                    </div>
+                </div>
+
+                               <!-- KPI 3 -->
+                <div class="p-space-md rounded-xl bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden">
+                    <div class="flex items-center justify-between text-on-surface-variant">
+                        <span class="font-label-ui text-label-ui uppercase tracking-wider">Toplam Set</span>
+                        <span class="material-symbols-outlined text-[20px] text-tertiary">layers</span>
+                    </div>
+                    <div class="mt-space-sm">
+                        <div class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+                            @(Model.Sum(r => r.Exercises?.Sum(e => e.Sets) ?? 0)) Set
+                        </div>
+                        <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Tüm rutinlerdeki toplam set</div>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="p-space-md rounded-xl bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden">
+                    <div class="flex items-center justify-between text-on-surface-variant">
+                        <span class="font-label-ui text-label-ui uppercase tracking-wider">Hedef Hacim</span>
+                        <span class="material-symbols-outlined text-[20px] text-primary">monitor_weight</span>
+                    </div>
+                    <div class="mt-space-sm">
+                        <div class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+                            @((Model.Sum(r => r.Exercises?.Sum(e => e.Sets * e.Reps * e.Weight) ?? 0m)).ToString("N0")) kg
+                        </div>
+                        <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Set × tekrar × ağırlık toplamı</div>
+                    </div>
+                </div>
+            </div>
+                
+                <!-- 3. Search & Filter Bar -->
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md p-space-sm rounded-xl bg-surface-container-low/70 border border-outline-variant/20 backdrop-blur-md mt-6">
+                <!-- Search Input -->
+                <div class="relative flex-1 min-w-[280px]">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+                    <input class="w-full pl-10 pr-16 py-2.5 rounded-lg bg-surface-container-lowest/80 border border-outline-variant/30 text-on-surface placeholder:text-outline text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="routineSearchInput" placeholder="Rutin adı veya içeriği ara..." type="text">
+                </div>
+                
+                <!-- Filter Chips -->
+                <div class="flex items-center gap-space-xs overflow-x-auto pb-1 lg:pb-0 text-nowrap scrollbar-none">
+                    <button class="filter-chip px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-ui text-label-ui transition-all" type="button">Tümü (@Model.Count())</button>
+                </div>
+                
+                <!-- View Switches -->
+                <div class="flex items-center gap-space-sm justify-between lg:justify-end border-t lg:border-t-0 pt-2 lg:pt-0 border-outline-variant/20">
+                    <div class="flex items-center bg-surface-container-lowest p-0.5 rounded-lg border border-outline-variant/30">
+                        <button class="p-1.5 rounded bg-surface-container text-primary hover:text-on-surface" id="viewGridBtn" title="Grid Görünümü" type="button">
+                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                        </button>
+                        <button class="p-1.5 rounded text-on-surface-variant hover:text-on-surface" id="viewListBtn" title="Liste Görünümü" type="button">
+                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Routines Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-space-lg mt-6" id="routinesContainer">
+                
+                @if (!Model.Any())
+                {
+                    <div class="col-span-full w-full py-20 rounded-2xl bg-surface-container-low/50 border border-white/5 flex flex-col items-center justify-center text-center">
+                        <span class="material-symbols-outlined text-[48px] text-outline mb-4">note_add</span>
+                        <h3 class="font-headline-sm text-on-surface font-bold">Kayıtlı hiçbir rutininiz yok.</h3>
+                        <p class="text-on-surface-variant font-body-sm mt-2 mb-6">İlk antrenman programınızı oluşturarak gelişiminizi planlayın.</p>
+                        <a asp-controller="Routine" asp-action="Create" class="px-space-md py-2 rounded-lg bg-primary text-on-primary font-bold">Rutin Oluştur</a>
+                    </div>
+                }
+
+                @foreach (var routine in Model)
+                {
+                    var exCount = routine.Exercises?.Count() ?? 0;
+                    var totalSets = routine.Exercises?.Sum(e => e.Sets) ?? 0;
+
+                    <div class="routine-card rounded-2xl bg-surface-container-low/90 backdrop-blur-xl border border-outline-variant/30 p-space-lg flex flex-col justify-between relative shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] group hover:border-primary/50 transition-all">
+                        
+                        <!-- Renk Şeridi -->
+                        <div class="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-surface-variant via-primary to-surface-variant group-hover:from-primary group-hover:via-surface-tint group-hover:to-primary transition-all rounded-t-2xl"></div>
+                        
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-space-sm">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-badge text-label-badge uppercase tracking-wider">Şablon</span>
+                                </div>
+                                <!-- Silme Butonu -->
+                                <form asp-controller="Routine" asp-action="Delete" method="post" class="m-0" onsubmit="return confirm('Bu rutini silmek istediğinize emin misiniz?');">
+                                    <input type="hidden" name="id" value="@routine.Id" />
+                                    <button type="submit" class="text-outline hover:text-error transition-colors" title="Sil">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight group-hover:text-primary transition-colors">
+                                @routine.Name
+                            </h3>
+                            
+                            <!-- Telemetry Specs Bar -->
+                            <div class="grid grid-cols-3 gap-1.5 py-space-sm my-space-sm bg-surface-container-lowest/60 rounded-xl px-space-sm border border-outline-variant/20 text-center">
+                                <div>
+                                    <div class="font-headline-sm text-[16px] text-on-surface font-bold">@exCount</div>
+                                    <div class="font-body-sm text-[11px] text-on-surface-variant uppercase">Egzersiz</div>
+                                </div>
+                                <div>
+                                    <div class="font-headline-sm text-[16px] text-on-surface font-bold">@totalSets</div>
+                                    <div class="font-body-sm text-[11px] text-on-surface-variant uppercase">Set</div>
+                                </div>
+                                <div>
+                                    <div class="font-headline-sm text-[16px] text-secondary font-bold">@((routine.Exercises?.Sum(e => e.Sets * e.Reps * e.Weight) ?? 0m).ToString("N0"))</div><div class="font-headline-sm text-[16px] text-secondary font-bold">Planlı</div>
+                                    <div class="font-body-sm text-[11px] text-on-surface-variant uppercase">Hacim (kg)</div>                                </div>
+                            </div>
+                            
+                            <!-- İçindeki Egzersizler -->
+                            <div class="flex flex-col gap-1.5 mt-space-sm">
+                                <div class="font-label-ui text-[11px] text-on-surface-variant uppercase tracking-wider">Egzersiz Akışı</div>
+                                <div class="flex flex-wrap gap-1">
+                                    @if(exCount > 0)
+                                    {
+                                        foreach(var ex in routine.Exercises.Take(3))
+                                        {
+                                            <span class="px-2 py-0.5 rounded-md bg-surface-container-high/70 text-on-surface text-body-sm text-[12px] border border-outline-variant/20 truncate max-w-full">@ex.ExerciseName</span>
+                                        }
+                                        if(exCount > 3)
+                                        {
+                                            <span class="px-2 py-0.5 rounded-md bg-surface-container-high/70 text-on-surface-variant text-body-sm text-[12px] border border-outline-variant/20">...ve @(exCount-3) daha</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-outline text-sm italic">Henüz hareket eklenmedi.</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Footer CTAs -->
+                        <div class="mt-space-lg pt-space-sm border-t border-outline-variant/20 flex flex-col gap-space-sm">
+                            <div class="flex items-center gap-space-xs">
+                                <a asp-controller="WorkoutSession" asp-action="Active" asp-route-routineId="@routine.Id" class="flex-1 py-2.5 rounded-lg bg-primary hover:bg-surface-tint text-on-primary font-headline-sm text-[14px] uppercase tracking-wider font-bold flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(16,185,129,0.25)] transition-all">
+                                    <span class="material-symbols-outlined text-[18px]">play_arrow</span> Başlat
+                                </a>
+                                <a href="/Routine/Detail/@routine.Id" class="w-10 h-10 rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors border border-outline-variant/30" title="Düzenle">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Grid / List Görünümü Geçişi ve Arama
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('routineSearchInput');
+            const cards = document.querySelectorAll('.routine-card');
+            const container = document.getElementById('routinesContainer');
+            const gridBtn = document.getElementById('viewGridBtn');
+            const listBtn = document.getElementById('viewListBtn');
+
+            // Arama Filtresi
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    cards.forEach(card => {
+                        const text = card.textContent.toLowerCase();
+                        card.style.display = text.includes(query) ? 'flex' : 'none';
+                    });
+                });
+            }
+
+            // Grid / Liste Toggle
+            if (gridBtn && listBtn && container) {
+                listBtn.addEventListener('click', () => {
+                    container.classList.remove('md:grid-cols-2', 'xl:grid-cols-3');
+                    container.classList.add('md:grid-cols-1', 'xl:grid-cols-1');
+                    listBtn.classList.add('bg-surface-container', 'text-primary');
+                    listBtn.classList.remove('text-on-surface-variant');
+                    gridBtn.classList.remove('bg-surface-container', 'text-primary');
+                    gridBtn.classList.add('text-on-surface-variant');
+                });
+                gridBtn.addEventListener('click', () => {
+                    container.classList.remove('md:grid-cols-1', 'xl:grid-cols-1');
+                    container.classList.add('md:grid-cols-2', 'xl:grid-cols-3');
+                    gridBtn.classList.add('bg-surface-container', 'text-primary');
+                    gridBtn.classList.remove('text-on-surface-variant');
+                    listBtn.classList.remove('bg-surface-container', 'text-primary');
+                    listBtn.classList.add('text-on-surface-variant');
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,124 @@
+@model BBLiftClient.Application.Dtos.ExerciseResponse
+@{
+    ViewData["Title"] = Model?.Name ?? "Egzersiz Detayı";
+    Layout = "_Layout";
+
+    string muscleName = ViewBag.MuscleName ?? "-";
+    string equipmentName = ViewBag.EquipmentName ?? "-";
+    string? muscleImage = ViewBag.MuscleImage as string;
+}
+
+<div class="flex flex-col w-full min-h-screen pb-32">
+    <div class="relative w-full overflow-visible">
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[720px] h-[280px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-lg w-full mt-8 relative z-10">
+
+            <div class="flex flex-col gap-space-md mb-space-xl">
+                <a asp-controller="Exercise" asp-action="Index"
+                   class="inline-flex items-center gap-space-xs w-fit text-on-surface-variant hover:text-primary transition-colors font-label-ui text-label-ui uppercase tracking-wide group">
+                    <span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-1">arrow_back</span>
+                    Kütüphaneye Dön
+                </a>
+
+                <div class="flex flex-col gap-space-xs">
+                    <div class="flex flex-wrap items-center gap-space-xs mb-1">
+                        <span class="bg-surface-container-high text-primary px-space-sm py-1 rounded-full font-label-badge text-label-badge uppercase tracking-wider">
+                            @muscleName
+                        </span>
+                        <span class="bg-surface-container-high text-secondary px-space-sm py-1 rounded-full font-label-badge text-label-badge uppercase tracking-wider">
+                            @equipmentName
+                        </span>
+                    </div>
+                    <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">
+                        @Model?.Name
+                    </h1>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+
+                <div class="lg:col-span-8 flex flex-col gap-space-xl">
+
+                    <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-surface-container-high border border-white/5 shadow-xl flex items-center justify-center">
+                        <span class="material-symbols-outlined text-9xl text-surface-variant">fitness_center</span>
+
+                        @if (!string.IsNullOrWhiteSpace(muscleImage))
+                        {
+                            <img src="@muscleImage" alt="@muscleName" onerror="this.style.display='none'"
+                                 class="absolute inset-0 w-full h-full object-cover" />
+                        }
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-60 pointer-events-none"></div>
+                    </div>
+
+                    <div class="flex flex-col gap-space-lg bg-surface-container-low p-space-lg rounded-xl shadow-md border border-white/5">
+                        <div class="flex items-center gap-space-xs border-b border-outline-variant/20 pb-space-md">
+                            <span class="material-symbols-outlined text-primary text-[24px]">menu_book</span>
+                            <h2 class="font-headline-md text-headline-md text-on-surface">Açıklama</h2>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model?.Description))
+                        {
+                            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed whitespace-pre-line">@Model.Description</p>
+                        }
+                        else
+                        {
+                            <p class="font-body-md text-body-md text-outline">Bu egzersiz için henüz bir açıklama eklenmemiş.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 flex flex-col gap-space-lg">
+
+                    <div class="bg-surface-container-low/90 backdrop-blur-xl rounded-xl p-space-lg shadow-xl border border-primary/20 flex flex-col gap-space-sm">
+                        <a asp-controller="Routine" asp-action="Index"
+                           class="w-full py-3.5 rounded-lg bg-primary text-on-primary font-label-ui text-label-ui uppercase tracking-wide font-bold hover:bg-primary-container transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">list_alt</span>
+                            Rutinlerime Git
+                        </a>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant text-center">
+                            Bu egzersizi, bir rutinin detay sayfasındaki egzersiz havuzundan rutinine ekleyebilirsin.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col gap-space-md bg-surface-container-low p-space-lg rounded-xl shadow-md border border-white/5">
+                        <div class="flex items-center gap-space-xs border-b border-outline-variant/20 pb-2 mb-2">
+                            <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Egzersiz Bilgileri</h3>
+                        </div>
+
+                        <a asp-controller="Exercise" asp-action="Index" asp-route-muscleGroupId="@Model?.MuscleGroupId"
+                           class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined text-[18px]">accessibility_new</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-label-badge text-label-badge text-outline uppercase">Hedef Kas Grubu</span>
+                                    <span class="font-label-ui text-label-ui text-on-surface">@muscleName</span>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-[18px] text-on-surface-variant">chevron_right</span>
+                        </a>
+
+                        <a asp-controller="Exercise" asp-action="Index" asp-route-equipmentId="@Model?.EquipmentId"
+                           class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+                                    <span class="material-symbols-outlined text-[18px]">fitness_center</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-label-badge text-label-badge text-outline uppercase">Gerekli Ekipman</span>
+                                    <span class="font-label-ui text-label-ui text-on-surface">@equipmentName</span>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-[18px] text-on-surface-variant">chevron_right</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

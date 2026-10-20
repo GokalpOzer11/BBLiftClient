@@ -1,0 +1,14 @@
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="mb-space-md p-space-sm bg-primary-container/20 border border-primary/30 rounded-lg flex items-center gap-3 shadow-md">
+        <span class="material-symbols-outlined text-primary">check_circle</span>
+        <span class="text-primary font-body-sm font-medium">@successMessage</span>
+    </div>
+}
+@if (TempData["ErrorMessage"] is string errorMessage)
+{
+    <div class="mb-space-md p-space-sm bg-error-container/30 border border-error/30 rounded-lg flex items-center gap-3 shadow-md">
+        <span class="material-symbols-outlined text-error">error</span>
+        <span class="text-error font-body-sm font-medium">@errorMessage</span>
+    </div>
+}

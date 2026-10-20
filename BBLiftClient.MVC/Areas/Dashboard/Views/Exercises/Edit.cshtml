@@ -1,0 +1,43 @@
+@model UpdateExerciseRequest
+
+@{
+    ViewBag.Title = "Egzersiz Düzenle";
+}
+
+<div class="row m-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                Düzenle
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Id" type="hidden" />
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Ad</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="MuscleGroupId" class="form-label">Kas Grubu</label>
+                        <select asp-for="MuscleGroupId" class="form-select" asp-items="ViewBag.MuscleGroups">
+                            <option value="">Kas grubu seçiniz</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="EquipmentId" class="form-label">Ekipman</label>
+                        <select asp-for="EquipmentId" class="form-select" asp-items="ViewBag.Equipments">
+                            <option value="">Ekipman seçiniz</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Açıklama</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success btn-sm">Güncelle</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Listeye Dön</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

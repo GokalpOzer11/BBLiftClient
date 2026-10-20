@@ -1,0 +1,342 @@
+@model BBLiftClient.Application.Dtos.RoutineResponse
+@{
+ViewData["Title"] = "Rutin Detayı";
+Layout = "_Layout";
+
+var allExercises = ViewBag.Exercises as IEnumerable<BBLiftClient.Application.Dtos.ExerciseResponse> ?? new List<BBLiftClient.Application.Dtos.ExerciseResponse>();
+}
+
+<div class="flex flex-col w-full min-h-[calc(100vh-160px)] pb-32">
+    <div class="relative w-full overflow-hidden">
+        <div class="absolute -top-32 left-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 right-10 w-80 h-80 bg-secondary-container/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin py-space-lg w-full relative z-10 mt-4">
+
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-lg">
+                <div class="flex flex-col gap-space-xs">
+                    <a asp-controller="Routine" asp-action="Index" class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary font-label-ui text-sm transition-colors w-fit mb-2">
+                        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Rutinlere Dön
+                    </a>
+                    <h1 class="font-headline-xl text-headline-xl tracking-tight text-on-surface">@Model.Name</h1>
+                    <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                        Bu şablona yeni hareketler ekleyin, silebilir veya sıralamasını düzenleyebilirsiniz.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-space-sm self-start lg:self-auto">
+                    <a asp-controller="WorkoutSession" asp-action="Active" asp-route-routineId="@Model.Id" class="flex items-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-ui text-label-ui font-bold shadow-[0_0_24px_rgba(16,185,129,0.35)] transition-all duration-200 active:scale-95">
+                        <span class="material-symbols-outlined text-[20px]">play_arrow</span> Bu Rutinle Başla
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+
+                <section class="lg:col-span-8 flex flex-col gap-space-lg">
+                    <div class="flex items-center justify-between px-space-xs">
+                        <div class="flex items-center gap-space-sm">
+                            <span class="w-1.5 h-4 bg-primary rounded-full"></span>
+                            <h2 class="font-headline-sm text-headline-sm text-on-surface">Egzersiz Sıralaması</h2>
+                            <span class="text-on-surface-variant font-label-ui text-label-ui font-normal">(@(Model.Exercises?.Count() ?? 0) Hareket)</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-space-md" id="routine-exercises-list">
+
+                        @if (Model.Exercises == null || !Model.Exercises.Any())
+                        {
+                        <div class="w-full py-16 rounded-xl bg-surface-container-low border border-white/5 flex flex-col items-center justify-center text-center">
+                            <span class="material-symbols-outlined text-[48px] text-outline mb-4">post_add</span>
+                            <h3 class="font-headline-sm text-on-surface font-bold">Rutin şablonunuz boş.</h3>
+                            <p class="text-on-surface-variant font-body-sm mt-2">Sağ taraftaki havuzdan (Egzersiz Kütüphanesi) hareket eklemeye başlayın.</p>
+                        </div>
+                        }
+
+                        @{ int order = 1; }
+                        @foreach (var rEx in Model.Exercises ?? new List<BBLiftClient.Application.Dtos.RoutineExerciseResponse>())
+                        {
+                        <!-- Exercise Card -->
+                        <div class="group relative bg-surface-container/80 hover:bg-surface-container-high/90 backdrop-blur-md rounded-xl p-space-md transition-all shadow-md border border-white/5"
+                             data-row
+                             data-id="@rEx.Id"
+                             data-exercise-id="@rEx.ExerciseId"
+                             data-routine-id="@Model.Id">
+
+                            <div class="flex items-start gap-space-md">
+                                <div class="flex flex-col items-center justify-center pt-1 text-outline">
+                                    <span class="font-label-badge text-label-badge text-primary mt-1">@order.ToString("00")</span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex flex-wrap items-center justify-between gap-space-xs mb-1">
+                                        <div class="flex items-center gap-space-xs">
+                                            <h3 class="font-headline-sm text-[17px] font-bold text-on-surface">@rEx.ExerciseName</h3>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <form asp-controller="Routine" asp-action="RemoveExercise" method="post" class="m-0" onsubmit="return removeExercise(event, this)">
+                                                <input type="hidden" name="id" value="@rEx.Id"/>
+                                                <button type="submit" class="p-1 rounded text-outline hover:text-error hover:bg-surface-container-highest transition-colors" title="Egzersizi Çıkar">
+                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs bg-surface-container-lowest/60 rounded-lg p-space-sm mt-3">
+                                        <label class="block">
+                                            <span class="block font-label-badge text-label-badge uppercase text-outline mb-1">Set</span>
+                                            <input type="number" inputmode="numeric" data-field="sets" value="@rEx.Sets" min="1" step="1" required
+                                                   class="w-full bg-surface-container-low text-on-surface font-headline-sm text-[15px] font-bold rounded-md px-2 py-1 focus:outline-none focus:bg-surface-container-high" />
+                                        </label>
+                                        <label class="block">
+                                            <span class="block font-label-badge text-label-badge uppercase text-outline mb-1">Tekrar</span>
+                                            <input type="number" inputmode="numeric" data-field="reps" value="@rEx.Reps" min="1" step="1" required
+                                                   class="w-full bg-surface-container-low text-on-surface font-headline-sm text-[15px] font-bold rounded-md px-2 py-1 focus:outline-none focus:bg-surface-container-high" />
+                                        </label>
+                                        <label class="block">
+                                            <span class="block font-label-badge text-label-badge uppercase text-outline mb-1">Ağırlık (kg)</span>
+                                            <input type="number" inputmode="decimal" data-field="weight"
+                                                   value="@rEx.Weight.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)"
+                                                   min="0" step="0.25" required
+                                                   class="w-full bg-surface-container-low text-on-surface font-headline-sm text-[15px] font-bold rounded-md px-2 py-1 focus:outline-none focus:bg-surface-container-high" />
+                                        </label>
+                                        <label class="block">
+                                            <span class="block font-label-badge text-label-badge uppercase text-outline mb-1">Dinlenme (sn)</span>
+                                            <input type="number" inputmode="numeric" data-field="restTimeInSeconds" value="@rEx.RestTimeInSeconds"
+                                                   min="0" step="5" placeholder="90"
+                                                   class="w-full bg-surface-container-low text-on-surface font-headline-sm text-[15px] font-bold rounded-md px-2 py-1 focus:outline-none focus:bg-surface-container-high" />
+                                        </label>
+                                    </div>
+                                    <div class="mt-1 h-4">
+                                        <span data-status class="font-body-sm text-[12px] text-on-surface-variant"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        order++;
+                        }
+                    </div>
+                </section>
+
+                <aside class="lg:col-span-4 flex flex-col gap-space-md">
+                    <div class="sticky top-24 bg-surface-container-low/95 backdrop-blur-2xl rounded-xl p-space-md shadow-2xl flex flex-col gap-space-md border border-white/5">
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-space-xs">
+                                <span class="material-symbols-outlined text-primary text-[22px]">auto_stories</span>
+                                <h3 class="font-headline-sm text-headline-sm text-on-surface">Egzersiz Havuzu</h3>
+                            </div>
+                            <span class="px-space-xs py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-badge text-label-badge uppercase">
+                                @allExercises.Count() Hareket
+                            </span>
+                        </div>
+
+                        <!-- Arama -->
+                        <div class="relative w-full">
+                            <span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                            <input type="text" id="library-search" onkeyup="filterLibrary()" placeholder="Egzersiz ara..." class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary transition-all border border-white/5">
+                        </div>
+
+                        <div class="flex flex-col gap-space-sm max-h-[500px] overflow-y-auto pr-1" id="library-list">
+                            @foreach (var libEx in allExercises)
+                            {
+                            <div class="lib-item group bg-surface-container rounded-lg p-space-sm hover:bg-surface-container-high transition-all flex flex-col gap-space-xs shadow-sm border border-transparent hover:border-primary/20">
+                                <div class="flex items-center justify-between gap-space-xs">
+                                    <h4 class="font-headline-sm text-[14px] font-bold text-on-surface lib-name truncate">@libEx.Name</h4>
+                                    <button type="button" onclick="openAddExercisePanel('@libEx.Id')" class="px-space-sm py-1 rounded-md bg-primary-container text-on-primary font-label-ui text-[11px] font-bold hover:bg-primary transition-transform active:scale-95 flex items-center gap-1 shrink-0">
+                                        <span class="material-symbols-outlined text-[14px]">add</span> Ekle
+                                    </button>
+                                </div>
+
+                                <div id="add-panel-@libEx.Id" class="hidden flex-col gap-2 mt-2 pt-2 border-t border-surface-container-lowest">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input type="number" id="sets-@libEx.Id" placeholder="Set (örn 4)" class="bg-surface-container-lowest text-on-surface text-xs p-1.5 rounded outline-none focus:ring-1 focus:ring-primary" />
+                                        <input type="number" id="reps-@libEx.Id" placeholder="Tekrar (örn 10)" class="bg-surface-container-lowest text-on-surface text-xs p-1.5 rounded outline-none focus:ring-1 focus:ring-primary" />
+                                        <input type="number" id="weight-@libEx.Id" placeholder="Ağırlık (kg)" class="bg-surface-container-lowest text-on-surface text-xs p-1.5 rounded outline-none focus:ring-1 focus:ring-primary" />
+                                        <input type="number" id="rest-@libEx.Id" placeholder="Dinlenme (sn)" class="bg-surface-container-lowest text-on-surface text-xs p-1.5 rounded outline-none focus:ring-1 focus:ring-primary" />
+                                    </div>
+                                    <button type="button" onclick="submitAddExercise('@libEx.Id')" class="w-full py-1.5 bg-primary text-on-primary font-bold text-xs rounded shadow-sm hover:bg-primary-container transition-colors">
+                                        Kaydet
+                                    </button>
+                                </div>
+                            </div>
+                            }
+                            @if (!allExercises.Any())
+                            {
+                            <span class="text-xs text-on-surface-variant text-center py-4">Kütüphane boş.</span>
+                            }
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
+
+    // Ortak POST yardımcısı: oturum düşmüşse (giriş sayfasına yönlendirme) net hata verir
+    async function sendJson(url, payload) {
+        let response;
+        try {
+            response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: payload === undefined ? undefined : JSON.stringify(payload)
+            });
+        } catch (err) {
+            throw new Error('Sunucuya bağlanılamadı.');
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        if (response.redirected || !contentType.includes('application/json')) {
+            throw new Error('Oturum süresi dolmuş olabilir. Lütfen çıkış yapıp tekrar giriş yapın.');
+        }
+
+        return response.json();
+    }
+
+    function setStatus(el, kind, text) {
+        const colors = { ok: 'text-primary', error: 'text-error', saving: 'text-on-surface-variant' };
+        el.className = 'font-body-sm text-[12px] ' + (colors[kind] || 'text-on-surface-variant');
+        el.textContent = text;
+        if (kind === 'ok') setTimeout(function () { if (el.textContent === text) el.textContent = ''; }, 2000);
+    }
+
+    async function saveRow(row) {
+        const status = row.querySelector('[data-status]');
+        const inputs = row.querySelectorAll('[data-field]');
+
+        for (const input of inputs) {
+            if (!input.checkValidity()) {
+                setStatus(status, 'error', 'Geçersiz değer');
+                input.reportValidity();
+                return;
+            }
+        }
+
+        const exerciseId = row.dataset.exerciseId;
+        if (!exerciseId || exerciseId === EMPTY_GUID) {
+            setStatus(status, 'error', 'Egzersiz eşleştirilemedi (API güncel mi?)');
+            return;
+        }
+
+        const val = function (name) { return row.querySelector('[data-field="' + name + '"]').value; };
+        const rest = val('restTimeInSeconds');
+
+        const payload = {
+            id: row.dataset.id,
+            routineId: row.dataset.routineId,
+            exerciseId: exerciseId,
+            sets: parseInt(val('sets'), 10),
+            weight: parseFloat(val('weight')),
+            reps: parseInt(val('reps'), 10),
+            restTimeInSeconds: rest === '' ? null : parseInt(rest, 10)
+        };
+
+        setStatus(status, 'saving', 'Kaydediliyor...');
+        try {
+            const result = await sendJson('/Routine/UpdateExercise', payload);
+            if (result.success) setStatus(status, 'ok', 'Kaydedildi');
+            else setStatus(status, 'error', result.message || 'Kaydedilemedi');
+        } catch (err) {
+            console.error(err);
+            setStatus(status, 'error', err.message);
+        }
+    }
+
+    document.addEventListener('change', function (e) {
+        const input = e.target.closest('[data-field]');
+        if (input) saveRow(input.closest('[data-row]'));
+    });
+
+    function filterLibrary() {
+        const term = document.getElementById('library-search').value.toLowerCase();
+        const items = document.querySelectorAll('.lib-item');
+        items.forEach(item => {
+            const name = item.querySelector('.lib-name').innerText.toLowerCase();
+            item.style.display = name.includes(term) ? 'flex' : 'none';
+        });
+    }
+
+    function openAddExercisePanel(exId) {
+        document.querySelectorAll('[id^="add-panel-"]').forEach(p => {
+            p.classList.add('hidden');
+            p.classList.remove('flex');
+        });
+
+        const panel = document.getElementById('add-panel-' + exId);
+        if (!panel) return;
+
+        // Boş alanları varsayılan değerlerle doldur: sadece Kaydet'e basmak yeterli olsun
+        const defaults = { sets: 3, reps: 10, weight: 0, rest: 90 };
+        for (const [key, value] of Object.entries(defaults)) {
+            const input = document.getElementById(key + '-' + exId);
+            if (input && input.value === '') input.value = value;
+        }
+
+        panel.classList.remove('hidden');
+        panel.classList.add('flex');
+    }
+
+    async function submitAddExercise(exId) {
+        const sets = parseInt(document.getElementById('sets-' + exId).value) || 0;
+        const reps = parseInt(document.getElementById('reps-' + exId).value) || 0;
+        const weight = parseFloat(document.getElementById('weight-' + exId).value) || 0;
+        const rest = parseInt(document.getElementById('rest-' + exId).value) || 90;
+
+        if (sets === 0 || reps === 0) {
+            alert("Set ve Tekrar sayılarını girmelisiniz!");
+            return;
+        }
+
+        const payload = {
+            routineId: '@Model.Id',
+            exerciseId: exId,
+            sets: sets,
+            reps: reps,
+            weight: weight,
+            restTimeInSeconds: rest
+        };
+
+        try {
+            const result = await sendJson('/Routine/AddExercise', payload);
+
+            if (result.success) {
+                window.location.reload();
+            } else {
+                alert("Kayıt hatası: " + result.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
+    }
+
+    async function removeExercise(e, form) {
+        e.preventDefault();
+
+        if (!confirm('Egzersizi rutinden çıkarmak istiyor musunuz?')) return false;
+
+        const formData = new FormData(form);
+        const rExId = formData.get('id');
+
+        try {
+            const result = await sendJson('/Routine/RemoveExercise?id=' + rExId);
+
+            if (result.success) {
+                window.location.reload();
+            } else {
+                alert("Silme hatası: " + result.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
+        return false;
+    }
+</script>
+}

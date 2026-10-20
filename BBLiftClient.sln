@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBLiftClient.MVC", "BBLiftClient.MVC\BBLiftClient.MVC.csproj", "{2B09121F-DA99-4181-85E5-26CD5DF80BBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBLiftClient.Application", "BBLiftClient.Application\BBLiftClient.Application.csproj", "{98C6518B-08EC-49D9-939A-C3801837B01C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B09121F-DA99-4181-85E5-26CD5DF80BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B09121F-DA99-4181-85E5-26CD5DF80BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B09121F-DA99-4181-85E5-26CD5DF80BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B09121F-DA99-4181-85E5-26CD5DF80BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98C6518B-08EC-49D9-939A-C3801837B01C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98C6518B-08EC-49D9-939A-C3801837B01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98C6518B-08EC-49D9-939A-C3801837B01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98C6518B-08EC-49D9-939A-C3801837B01C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,30 @@
+@model CreateMuscleGroupRequest
+
+@{
+    ViewBag.Title = "Kas Grubu Ekle";
+}
+
+<div class="row m-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                Yeni Kas Grubu
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Ad</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ImageUrl" class="form-label">Görsel URL'si</label>
+                        <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                    </div>
+                    <button type="submit" class="btn btn-outline-success btn-sm">Kaydet</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Listeye Dön</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

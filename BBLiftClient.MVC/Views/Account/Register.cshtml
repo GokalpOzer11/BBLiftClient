@@ -1,0 +1,183 @@
+@model BBLiftClient.Application.Dtos.SignUpRequest
+@{
+    ViewData["Title"] = "Yeni Hesap Oluştur";
+    <div asp-validation-summary="All" class="text-danger font-bold mb-4"></div>
+}
+
+<div class="relative w-full max-w-7xl mx-auto px-gutter py-space-xl overflow-hidden">
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-primary-container/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-32 w-80 h-80 bg-secondary/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+    <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+        
+        <div class="lg:col-span-7 flex flex-col gap-space-lg">
+            
+            <div class="flex flex-col gap-space-xs">
+                <div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-high w-fit shadow-sm">
+                    <span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span class="font-label-badge text-label-badge text-primary uppercase tracking-widest">BBLift Yeni Atlet Kaydı</span>
+                </div>
+                <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight mt-space-xs">
+                    Performansı Zirveye Taşı:<br/> <span class="text-primary font-extrabold">Yeni Hesap Oluştur</span>
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+                    Rutinlerini oluştur, antrenmanlarını kaydet ve gelişimini takip etmeye hemen başla.
+                </p>
+            </div>
+
+            <div class="relative flex items-center py-space-xs">
+                <div class="flex-grow h-[1px] bg-surface-container-highest"></div>
+                <span class="flex-shrink mx-4 font-label-badge text-[11px] uppercase tracking-widest text-outline">Kayıt Ol</span>
+                <div class="flex-grow h-[1px] bg-surface-container-highest"></div>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="p-space-sm bg-error-container text-on-error-container rounded-lg font-body-sm text-body-sm">
+                    <div asp-validation-summary="All" class="text-error font-bold"></div>
+                </div>
+            }
+
+            <form asp-controller="Account" asp-action="Register" method="post" class="flex flex-col gap-space-md">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                    <div class="flex flex-col gap-1.5">
+                        <label asp-for="FirstName" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                            <span>Adınız</span>
+                            <span class="text-outline text-xs font-normal">Zorunlu</span>
+                        </label>
+                        <div class="relative">
+                            <input asp-for="FirstName" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" placeholder="Mert" required="required" />
+                        </div>
+                        <span asp-validation-for="FirstName" class="text-error text-xs"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label asp-for="LastName" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                            <span>Soyadınız</span>
+                            <span class="text-outline text-xs font-normal">Zorunlu</span>
+                        </label>
+                        <div class="relative">
+                            <input asp-for="LastName" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" placeholder="Yılmaz" required="required" />
+                        </div>
+                        <span asp-validation-for="LastName" class="text-error text-xs"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                    <div class="flex flex-col gap-1.5">
+                        <label asp-for="Email" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                            <span>E-Posta Adresi</span>
+                            <span class="material-symbols-outlined text-xs text-outline">alternate_email</span>
+                        </label>
+                        <div class="relative">
+                            <input asp-for="Email" type="email" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" placeholder="mert.yilmaz@athletic.com" required="required" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-error text-xs"></span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-1.5">
+                        <label asp-for="UserName" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                            <span>Atlet Kimliği / Kullanıcı Adı</span>
+                            <span class="text-primary text-xs font-medium">@@ ön eki ile</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-3.5 text-outline font-label-ui text-sm">@@</span>
+                            <input asp-for="UserName" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 pl-8 pr-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" placeholder="mertyilmaz" required="required" />
+                        </div>
+                        <span asp-validation-for="UserName" class="text-error text-xs"></span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label asp-for="DateOfBirth" class="font-label-ui text-label-ui text-on-surface flex items-center justify-between">
+                        <span>Doğum Tarihi</span>
+                        <span class="material-symbols-outlined text-xs text-outline">calendar_month</span> 
+                    </label>
+                    <div class="relative">
+                        <input asp-for="DateOfBirth" type="date" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" required="required" />
+                    </div>
+                    <span asp-validation-for="DateOfBirth" class="text-error text-xs"></span>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                    <div class="flex flex-col gap-1.5">
+                        <label asp-for="Password" class="font-label-ui text-label-ui text-on-surface">Güçlü Şifre</label>
+                        <div class="relative">
+                            <input asp-for="Password" type="password" class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline/60 px-space-md py-3 rounded-lg font-body-md text-body-md shadow-inner transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/80 focus:bg-surface-container-low" required="required" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-error text-xs"></span>
+                    </div>
+                    
+                </div>
+                
+                <div class="flex flex-col gap-2 pt-space-xs">
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required="required" class="mt-0.5 h-4 w-4 rounded bg-surface-container-lowest text-primary accent-primary focus:ring-primary/40 focus:ring-offset-0 cursor-pointer" />
+                        <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors select-none">
+                            Hesap oluşturarak BBLift kullanım koşullarını okuduğumu ve kabul ettiğimi onaylıyorum.
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="mt-space-sm relative group overflow-hidden w-full py-4 px-space-lg rounded-lg bg-primary hover:bg-primary-fixed text-on-primary font-headline-sm text-sm uppercase tracking-wider font-extrabold flex items-center justify-center gap-space-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200">
+                    <span>Hesabı Oluştur ve Başla</span>
+                    <span class="material-symbols-outlined text-xl transition-transform group-hover:translate-x-1">arrow_forward</span>
+                </button>
+
+                <div class="flex items-center justify-center gap-1.5 py-1 font-body-sm text-body-sm text-on-surface-variant">
+                    <span>Zaten bir BBLift hesabın var mı?</span>
+                    <a href="/Account/Login" class="text-primary hover:text-primary-fixed font-semibold hover:underline">Giriş Yap</a>
+                </div>
+
+            </form>
+        </div>
+        <div class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-28">
+            <div class="rounded-xl bg-surface-container/70 backdrop-blur-xl p-space-lg shadow-xl relative overflow-hidden flex flex-col gap-space-lg">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex items-center gap-space-xs">
+                    <span class="material-symbols-outlined text-primary text-xl">bolt</span>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">BBLift ile Neler Yapabilirsin?</h3>
+                </div>
+
+                <div class="flex flex-col gap-space-sm">
+                    <div class="p-space-md rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+                        <div class="w-10 h-10 rounded-lg bg-primary-container/20 text-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-xl">list_alt</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <h4 class="font-label-ui text-label-ui text-on-surface font-bold">Rutin Oluşturucu</h4>
+                            <p class="font-body-sm text-[12px] text-on-surface-variant leading-snug">Egzersizlerini seç; set, tekrar, ağırlık ve dinlenme sürelerini belirle.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-space-md rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+                        <div class="w-10 h-10 rounded-lg bg-secondary-container/20 text-secondary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-xl">fitness_center</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <h4 class="font-label-ui text-label-ui text-on-surface font-bold">Antrenman Takibi</h4>
+                            <p class="font-body-sm text-[12px] text-on-surface-variant leading-snug">Rutinle ya da serbest başla, her seti ağırlık, tekrar ve RIR ile kaydet.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-space-md rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+                        <div class="w-10 h-10 rounded-lg bg-primary-container/20 text-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-xl">history</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <h4 class="font-label-ui text-label-ui text-on-surface font-bold">Geçmiş ve Hacim</h4>
+                            <p class="font-body-sm text-[12px] text-on-surface-variant leading-snug">Tamamlanan antrenmanlarını ve toplam hacmini profilinde gör, istediğini yeniden başlat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

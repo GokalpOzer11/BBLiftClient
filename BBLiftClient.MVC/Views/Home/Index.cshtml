@@ -1,0 +1,245 @@
+﻿@using System.Globalization
+@using BBLiftClient.Application.Dtos
+@{
+    ViewData["Title"] = "Antrenmanını Planla ve Takip Et";
+    Layout = "_Layout";
+
+    var tr = CultureInfo.GetCultureInfo("tr-TR");
+    var isAuth = User.Identity != null && User.Identity.IsAuthenticated;
+
+    int exerciseCount = ViewBag.ExerciseCount ?? 0;
+    int muscleGroupCount = ViewBag.MuscleGroupCount ?? 0;
+    int packageCount = ViewBag.PackageCount ?? 0;
+
+    var packages = (ViewBag.Packages as IEnumerable<MembershipPackageResponse>)
+                   ?? Enumerable.Empty<MembershipPackageResponse>();
+
+    var features = new[]
+    {
+        (Icon: "fitness_center", Title: "Egzersiz Kütüphanesi",
+         Text: "Hareketleri ada, kas grubuna ve ekipmana göre ara. Her egzersizin detayını incele.",
+         Href: "/Exercise", Cta: "Kütüphaneye Git"),
+        (Icon: "list_alt", Title: "Rutin Oluşturucu",
+         Text: "Egzersizlerini seç; set, tekrar, ağırlık ve dinlenme süresini belirle, rutinini kaydet.",
+         Href: "/Routine/Create", Cta: "Rutin Oluştur"),
+        (Icon: "play_circle", Title: "Antrenman Takibi",
+         Text: "Rutinle ya da serbest başla. Her seti ağırlık, tekrar ve RIR değeriyle kaydet, süreyi canlı izle.",
+         Href: "/Routine", Cta: "Rutinlerime Git"),
+        (Icon: "history", Title: "Geçmiş ve İstatistikler",
+         Text: "Tamamlanan antrenmanlarını, toplam hacmini ve seans sayını gör. Eski bir antrenmanı tek tıkla yeniden başlat.",
+         Href: "/Account/Workouts", Cta: "Geçmişe Bak"),
+        (Icon: "workspace_premium", Title: "Üyelik Paketleri",
+         Text: "Paketini seç, sepete ekle, ödeme formunu doldur. Siparişlerini ve durumlarını takip et.",
+         Href: "/MembershipPackage", Cta: "Paketleri Gör")
+    };
+
+    var steps = new[]
+    {
+        (No: "1", Title: "Hesap Oluştur", Text: "Ücretsiz kayıt ol ve giriş yap."),
+        (No: "2", Title: "Rutinini Kur", Text: "Egzersizlerini seç, set ve tekrar hedeflerini belirle."),
+        (No: "3", Title: "Antrenmanı Kaydet", Text: "Rutinle başla, setleri tamamladıkça onayla. Süre ve hacim otomatik hesaplanır."),
+        (No: "4", Title: "Gelişimini İzle", Text: "Geçmişine bak, istediğin antrenmanı yeniden başlat.")
+    };
+
+    const string PrimaryBtn = "inline-flex items-center justify-center gap-2 px-space-lg py-3.5 rounded-lg bg-primary text-on-primary font-label-ui text-label-ui font-bold uppercase tracking-wide shadow-[0_0_24px_rgba(16,185,129,0.35)] hover:bg-primary-container transition-all active:scale-95";
+    const string SecondaryBtn = "inline-flex items-center justify-center gap-2 px-space-lg py-3.5 rounded-lg bg-surface-container-high text-on-surface font-label-ui text-label-ui font-bold uppercase tracking-wide hover:bg-surface-container-highest transition-all active:scale-95";
+}
+
+<div class="flex flex-col w-full">
+
+    <div class="relative w-full overflow-hidden">
+        <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-primary/10 blur-[130px] rounded-full pointer-events-none"></div>
+        <div class="absolute top-72 left-12 w-80 h-80 bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <section class="max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-16 relative">
+            <div class="flex flex-col items-center text-center max-w-4xl mx-auto space-y-6">
+
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container-high shadow-inner">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+                    </span>
+                    <span class="font-label-badge text-label-badge uppercase tracking-widest text-primary">Antrenman Planlama ve Takip Platformu</span>
+                </div>
+
+                <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-on-surface tracking-tight">
+                    Antrenmanını Planla, <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-fixed to-secondary">
+                        İlerlemeni Veriyle Takip Et.
+                    </span>
+                </h1>
+
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Rutinlerini oluştur, antrenmanını set set kaydet; toplam hacmini ve geçmişini tek yerden gör.
+                    Egzersiz kütüphanesi ve üyelik paketleri de BBLift içinde.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-space-sm pt-space-sm">
+                    @if (isAuth)
+                    {
+                        <a href="/WorkoutSession/StartQuick" class="@PrimaryBtn">
+                            <span class="material-symbols-outlined text-[20px]">play_arrow</span> Antrenman Başlat
+                        </a>
+                        <a href="/Routine" class="@SecondaryBtn">
+                            <span class="material-symbols-outlined text-[20px]">list_alt</span> Rutinlerim
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/Account/Register" class="@PrimaryBtn">
+                            Ücretsiz Kayıt Ol <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                        </a>
+                        <a href="/Account/Login" class="@SecondaryBtn">
+                            <span class="material-symbols-outlined text-[20px]">login</span> Giriş Yap
+                        </a>
+                    }
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 pt-space-lg text-on-surface-variant">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[22px]">fitness_center</span>
+                        <span class="font-label-ui text-label-ui"><strong class="text-on-surface">@exerciseCount</strong> Egzersiz</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[22px]">accessibility_new</span>
+                        <span class="font-label-ui text-label-ui"><strong class="text-on-surface">@muscleGroupCount</strong> Kas Grubu</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[22px]">workspace_premium</span>
+                        <span class="font-label-ui text-label-ui"><strong class="text-on-surface">@packageCount</strong> Üyelik Paketi</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="max-w-7xl mx-auto px-6 lg:px-12 py-16 w-full">
+        <div class="flex flex-col gap-space-xs mb-space-lg max-w-2xl">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface">Neler Yapabilirsin?</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+                Antrenman planlamasından siparişe kadar ihtiyacın olan her şey tek çatı altında.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
+            @foreach (var f in features)
+            {
+                <a href="@f.Href"
+                   class="group rounded-xl bg-surface-container-low border border-white/5 p-space-lg flex flex-col gap-space-sm hover:bg-surface-container hover:border-primary/30 hover:-translate-y-0.5 transition-all shadow-md">
+                    <div class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-all">
+                        <span class="material-symbols-outlined text-[26px]">@f.Icon</span>
+                    </div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface">@f.Title</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant">@f.Text</p>
+                    <span class="mt-auto pt-space-xs inline-flex items-center gap-1 text-primary font-label-ui text-label-ui">
+                        @f.Cta <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </span>
+                </a>
+            }
+
+            <div class="rounded-xl bg-surface-container-low border border-white/5 p-space-lg flex flex-col gap-space-sm shadow-md">
+                <div class="w-12 h-12 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Yönetim Paneli</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                    Yöneticiler egzersiz, kas grubu, ekipman ve üyelik paketlerini rol tabanlı panelden yönetir.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-surface-container-lowest/60 w-full">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+            <div class="flex flex-col gap-space-xs mb-space-lg max-w-2xl">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface">Nasıl Çalışır?</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">Dört adımda başla.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+                @foreach (var s in steps)
+                {
+                    <div class="rounded-xl bg-surface-container-low border border-white/5 p-space-lg flex flex-col gap-space-sm">
+                        <span class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm font-bold">@s.No</span>
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface">@s.Title</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">@s.Text</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    @if (packages.Any())
+    {
+        <section class="max-w-7xl mx-auto px-6 lg:px-12 py-16 w-full">
+            <div class="flex items-end justify-between gap-space-md mb-space-lg">
+                <div class="flex flex-col gap-space-xs max-w-2xl">
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface">Üyelik Paketleri</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Sana uygun paketi seç, sepetine ekle.</p>
+                </div>
+                <a href="/MembershipPackage" class="hidden sm:inline-flex items-center gap-1 text-primary font-label-ui text-label-ui hover:underline">
+                    Tüm Paketler <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+                @foreach (var p in packages)
+                {
+                    <div class="rounded-xl bg-surface-container-low border border-white/5 p-space-lg flex flex-col gap-space-sm shadow-md">
+                        <span class="self-start px-2 py-0.5 rounded bg-primary/10 text-primary font-label-badge text-label-badge uppercase">@p.DurationInMonths Ay</span>
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface">@p.Name</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 min-h-[72px]">@p.Description</p>
+                        <div class="font-label-numeric-stat text-[28px] font-extrabold text-primary">@p.Price.ToString("N2", tr) ₺</div>
+
+                        @if (isAuth)
+                        {
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="m-0 mt-auto">
+                                <input type="hidden" name="packageId" value="@p.Id" />
+                                <button type="submit" class="w-full @PrimaryBtn">
+                                    <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span> Sepete Ekle
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="mt-auto w-full @SecondaryBtn">Satın almak için giriş yap</a>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <section class="max-w-7xl mx-auto px-6 lg:px-12 pb-16 w-full">
+        <div class="rounded-2xl bg-surface-container-low border border-white/5 p-space-xl text-center flex flex-col items-center gap-space-md shadow-xl">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface">Hazırsan Başlayalım.</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+                İlk rutinini oluştur, ilk antrenmanını kaydet. Gelişimin burada birikir.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-space-sm">
+                @if (isAuth)
+                {
+                    <a href="/Routine/Create" class="@PrimaryBtn">
+                        <span class="material-symbols-outlined text-[20px]">add</span> Yeni Rutin Oluştur
+                    </a>
+                    <a href="/Exercise" class="@SecondaryBtn">Egzersizlere Göz At</a>
+                }
+                else
+                {
+                    <a href="/Account/Register" class="@PrimaryBtn">Ücretsiz Kayıt Ol</a>
+                    <a href="/Account/Login" class="@SecondaryBtn">Giriş Yap</a>
+                }
+            </div>
+        </div>
+    </section>
+
+    <footer class="w-full bg-surface-container-lowest border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-lg flex flex-col md:flex-row items-center justify-between gap-space-sm">
+            <div class="flex items-center gap-2 text-on-surface">
+                <span class="material-symbols-outlined text-primary text-[22px]">fitness_center</span>
+                <span class="font-headline-sm text-headline-sm tracking-tight">BBLIFT</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-outline">© @DateTime.Now.Year BBLift. Bitirme projesi.</p>
+        </div>
+    </footer>
+</div>

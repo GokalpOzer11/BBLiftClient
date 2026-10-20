@@ -1,0 +1,43 @@
+@model UpdateMembershipPackageRequest
+
+@{
+    ViewBag.Title = "Üyelik Paketi Düzenle";
+}
+
+<div class="row m-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                Düzenle
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Id" type="hidden" />
+                    <input type="hidden" name="Currency" value="TRY" />
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Ad</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Açıklama</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Price" class="form-label">Fiyat (TRY)</label>
+                            <input name="Price" type="number" step="0.01" min="0" class="form-control"
+                                   value="@Model.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DurationInMonths" class="form-label">Süre (ay)</label>
+                            <input asp-for="DurationInMonths" type="number" min="1" class="form-control" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success btn-sm">Güncelle</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Listeye Dön</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

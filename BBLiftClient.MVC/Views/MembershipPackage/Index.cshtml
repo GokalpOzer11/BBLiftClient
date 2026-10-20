@@ -1,0 +1,110 @@
+@* Kendi DTO'nun namespace'ini buraya yazmalısın *@
+@model IEnumerable<dynamic> 
+
+@{
+    ViewData["Title"] = "Üyelik Paketleri";
+    Layout = "_Layout"; 
+}
+
+<div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 flex flex-col gap-8">
+    
+    <div class="flex flex-col items-center text-center max-w-3xl mx-auto gap-4 relative">
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-96 h-36 bg-primary/10 blur-[90px] pointer-events-none"></div>
+        <span class="font-label-badge text-label-badge uppercase tracking-widest text-primary px-3 py-1 rounded-full bg-primary/10 shadow-sm flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+            YENİ DÖNEM, YENİ HEDEFLER
+        </span>
+        <h1 class="font-headline-xl text-headline-xl text-on-surface uppercase tracking-tight font-extrabold">
+            Hedefine Uygun <span class="text-primary">Planı Seç</span>
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">
+            İhtiyacına en uygun paketi seç, sepetine ekle ve hemen başla.        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-4">
+        
+        @if(Model != null && Model.Any())
+        {
+            foreach (var package in Model)
+            {
+                bool isPopular = package.Name.ToString().Contains("Pro", StringComparison.OrdinalIgnoreCase) || 
+                                 package.Name.ToString().Contains("VIP", StringComparison.OrdinalIgnoreCase);
+
+                <div class="flex flex-col justify-between rounded-xl p-8 transition-all duration-300 relative @(isPopular ? "bg-surface-container-high shadow-2xl lg:-translate-y-2 border border-primary/20" : "bg-surface-container shadow-xl hover:shadow-2xl")">
+                    
+                    @if(isPopular)
+                    {
+                        <div class="absolute inset-x-0 -top-3.5 flex justify-center">
+                            <span class="px-4 py-1 rounded-full bg-primary text-on-primary font-label-badge text-label-badge uppercase font-extrabold tracking-widest shadow-lg flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">local_fire_department</span>
+                                En Çok Tercih Edilen
+                            </span>
+                        </div>
+                    }
+
+                    <div class="flex flex-col gap-6 pt-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-1">@package.Name</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-lg @(isPopular ? "bg-primary/20 text-primary" : "bg-surface-container-highest text-outline") flex items-center justify-center">
+                                <span class="material-symbols-outlined text-2xl">@(isPopular ? "bolt" : "fitness_center")</span>
+                            </div>
+                        </div>
+                        
+                        <p class="font-body-sm text-body-sm text-on-surface-variant h-12">
+                            @(package.Description ?? "Bu paket ile hedeflerinize emin adımlarla ilerleyin ve performansınızı zirveye taşıyın.")
+                        </p>
+
+                        <div class="py-2">
+                            <div class="flex items-baseline gap-1">
+                                <span class="font-label-numeric-stat text-label-numeric-stat @(isPopular ? "text-primary" : "text-on-surface") font-extrabold">
+                                    ₺@package.Price
+                                </span>
+                                <span class="font-body-sm text-body-sm text-on-surface-variant font-medium">/ ay</span>
+                            </div>
+                        </div>
+
+                        <div class="h-px bg-surface-variant w-full my-1"></div>
+
+                        <div class="flex flex-col gap-3">
+                            <span class="font-label-badge text-label-badge uppercase tracking-wider @(isPopular ? "text-primary" : "text-on-surface") font-bold">Paket İçeriği</span>
+                            <ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface-variant">
+                                <li class="flex items-center gap-3 text-on-surface">
+                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    <span>Tüm temel özellikler</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-on-surface">
+                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    <span>Kapsamlı egzersiz kütüphanesi</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-on-surface">
+                                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    <span>Antrenman geçmişi ve hacim takibi</span>                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-8">
+                        <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="packageId" value="@package.Id" />
+                            <button type="submit" class="w-full py-3 px-4 rounded-lg font-bold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95 @(isPopular ? "bg-primary hover:bg-primary-fixed text-on-primary font-headline-sm text-headline-sm shadow-xl" : "bg-surface-bright hover:bg-surface-variant text-on-surface font-label-ui text-label-ui")">
+                                <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
+                                <span>Sepete Ekle</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-span-1 lg:col-span-3 text-center py-20">
+                <span class="material-symbols-outlined text-6xl text-surface-variant">inventory_2</span>
+                <h3 class="font-headline-md text-on-surface mt-4">Henüz bir paket bulunmuyor</h3>
+                <p class="text-on-surface-variant mt-2">Yönetici tarafından henüz bir üyelik paketi sisteme eklenmemiş.</p>
+            </div>
+        }
+        
+    </div>
+</div>

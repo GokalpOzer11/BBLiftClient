@@ -1,0 +1,51 @@
+@model IEnumerable<MuscleGroupResponse>
+
+@{
+    ViewBag.Title = "Kas Grupları";
+}
+
+<div class="row m-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <a asp-action="Create" class="btn btn-outline-primary btn-sm">Yeni Ekle</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Görsel</th>
+                            <th>Ad</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.GifUrl))
+                                    {
+                                        <img src="@item.GifUrl" alt="@item.Name" width="48" height="48" class="rounded object-fit-cover" />
+                                    }
+                                </td>
+                                <td>@item.Name</td>
+                                <td class="text-nowrap">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm">Düzenle</a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                          onsubmit="return confirm('Bu kas grubu silinsin mi?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Sil</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr><td colspan="3" class="text-center text-muted py-4">Henüz kas grubu eklenmemiş.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

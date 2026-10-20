@@ -1,0 +1,110 @@
+@using System.Globalization
+@using BBLiftClient.Application.Enums
+@using BBLiftClient.MVC.Models
+@model CheckoutForm
+@{
+    ViewData["Title"] = "Ödeme";
+    var tr = CultureInfo.GetCultureInfo("tr-TR");
+    var cart = ViewBag.Cart as CartViewModel ?? new CartViewModel([]);
+}
+
+<div class="max-w-5xl mx-auto w-full px-margin-mobile md:px-margin py-space-lg mt-4">
+
+    <div class="flex items-center gap-space-sm mb-space-md">
+        <span class="w-1.5 h-4 bg-primary rounded-full"></span>
+        <h1 class="font-headline-md text-headline-md text-on-surface">Ödeme</h1>
+    </div>
+
+    <partial name="_Flash" />
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg items-start">
+
+        <form asp-controller="Checkout" asp-action="Pay" method="post" autocomplete="off"
+              class="lg:col-span-2 bg-surface-container-low rounded-xl p-space-lg border border-white/5 shadow-xl flex flex-col gap-space-md">
+
+            <div class="rounded-lg bg-secondary/10 border border-secondary/30 text-secondary font-body-sm px-space-md py-space-sm">
+                Bu bir demo ödeme formudur. Kart bilgileri kaydedilmez ve hiçbir yere gönderilmez.
+                Deneme için 16 haneli herhangi bir sayı, ileri bir tarih (örn. 12/30) ve 3 haneli bir CVV girebilirsin.
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="rounded-lg bg-error-container/30 text-error font-body-sm px-space-md py-space-sm empty:hidden"></div>
+
+            <div class="flex flex-col gap-1">
+                <label asp-for="Method" class="font-label-badge text-label-badge uppercase tracking-wider text-outline">Ödeme Yöntemi</label>
+                <select asp-for="Method" class="w-full bg-surface-container-lowest text-on-surface font-body-md px-space-md py-2.5 rounded-lg border border-white/5 focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="@PaymentMethod.CreditCard">Kredi Kartı</option>
+                    <option value="@PaymentMethod.DebitCard">Banka Kartı</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label asp-for="CardHolder" class="font-label-badge text-label-badge uppercase tracking-wider text-outline">Kart Üzerindeki İsim</label>
+                <input asp-for="CardHolder" maxlength="100" placeholder="Ad Soyad"
+                       class="w-full bg-surface-container-lowest text-on-surface font-body-md px-space-md py-2.5 rounded-lg border border-white/5 focus:outline-none focus:ring-1 focus:ring-primary" />
+                <span asp-validation-for="CardHolder" class="text-error text-xs"></span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label asp-for="CardNumber" class="font-label-badge text-label-badge uppercase tracking-wider text-outline">Kart Numarası</label>
+                <input asp-for="CardNumber" id="card-number" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000"
+                       class="w-full bg-surface-container-lowest text-on-surface font-mono px-space-md py-2.5 rounded-lg border border-white/5 focus:outline-none focus:ring-1 focus:ring-primary" />
+                <span asp-validation-for="CardNumber" class="text-error text-xs"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-space-md">
+                <div class="flex flex-col gap-1">
+                    <label asp-for="Expiry" class="font-label-badge text-label-badge uppercase tracking-wider text-outline">Son Kullanma (AA/YY)</label>
+                    <input asp-for="Expiry" id="card-expiry" inputmode="numeric" maxlength="5" placeholder="12/30"
+                           class="w-full bg-surface-container-lowest text-on-surface font-mono px-space-md py-2.5 rounded-lg border border-white/5 focus:outline-none focus:ring-1 focus:ring-primary" />
+                    <span asp-validation-for="Expiry" class="text-error text-xs"></span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label asp-for="Cvv" class="font-label-badge text-label-badge uppercase tracking-wider text-outline">CVV</label>
+                    <input asp-for="Cvv" type="password" inputmode="numeric" maxlength="4" placeholder="123"
+                           class="w-full bg-surface-container-lowest text-on-surface font-mono px-space-md py-2.5 rounded-lg border border-white/5 focus:outline-none focus:ring-1 focus:ring-primary" />
+                    <span asp-validation-for="Cvv" class="text-error text-xs"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-space-sm">
+                <a asp-controller="Cart" asp-action="Index"
+                   class="px-space-md py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-ui text-label-ui">Sepete Dön</a>
+                <button type="submit"
+                        class="px-space-lg py-2.5 rounded-lg bg-primary text-on-primary font-label-ui text-label-ui font-bold shadow-[0_0_24px_rgba(16,185,129,0.35)] hover:bg-primary-container transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">lock</span>
+                    @cart.Total.ToString("N2", tr) ₺ Öde
+                </button>
+            </div>
+        </form>
+
+        <aside class="bg-surface-container-low rounded-xl p-space-lg border border-white/5 shadow-xl flex flex-col gap-space-md lg:sticky lg:top-24">
+            <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Sipariş Özeti</h2>
+
+            @foreach (var line in cart.Lines)
+            {
+                <div class="flex items-center justify-between gap-space-sm text-sm">
+                    <span class="text-on-surface truncate">@line.PackageName <span class="text-on-surface-variant">× @line.Quantity</span></span>
+                    <span class="text-on-surface-variant shrink-0">@line.LineTotal.ToString("N2", tr) ₺</span>
+                </div>
+            }
+
+            <div class="flex items-center justify-between border-t border-white/5 pt-space-sm">
+                <span class="font-label-ui text-label-ui uppercase text-outline">Toplam</span>
+                <span class="font-label-numeric-stat text-[24px] font-extrabold text-primary">@cart.Total.ToString("N2", tr) ₺</span>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script>
+    document.getElementById('card-number').addEventListener('input', function (e) {
+        const digits = e.target.value.replace(/\D/g, '').slice(0, 16);
+        e.target.value = digits.replace(/(.{4})/g, '$1 ').trim();
+    });
+
+    document.getElementById('card-expiry').addEventListener('input', function (e) {
+        let digits = e.target.value.replace(/\D/g, '').slice(0, 4);
+        if (digits.length > 2) digits = digits.slice(0, 2) + '/' + digits.slice(2);
+        e.target.value = digits;
+    });
+</script>
