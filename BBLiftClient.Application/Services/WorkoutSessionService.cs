@@ -1,5 +1,5 @@
 using BBLiftClient.Application.Common;
-using BBLiftClient.Application.Dtos; // Sadece Client olan kalsın
+using BBLiftClient.Application.Dtos;
 using System.Net.Http.Json;
 using BBLift.Application.Dtos;
 

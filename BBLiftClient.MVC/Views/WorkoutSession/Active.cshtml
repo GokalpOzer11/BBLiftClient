@@ -251,7 +251,7 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
                         name: newName,
                         endTime: null,
                         workOutDurationInSeconds: seconds,
-                        status: 1 // GÜNCELLEME: Enum string çeviri hatasından kaçmak için int yolluyoruz (1 = Active)
+                        status: 1
                     })
                 });
 
@@ -423,7 +423,7 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
             setNumber: setNumber,
             weight: weight,
             reps: reps,
-            status: 0, // SetStatus: 0 = Normal, 1 = Warmup, 2 = Failure, 3 = DropSet
+            status: 0,
             rir: rir,
             restTimeInSeconds: null
         };
@@ -474,7 +474,7 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
         const name = pick(ex, 'ExerciseName');
         const sets = pick(ex, 'Sets') || [];
 
-        addExerciseToSession(exerciseId, name); // kartı ve 1 boş set satırını oluşturur
+        addExerciseToSession(exerciseId, name);
         const cardId = exCounter;
 
         if (sets.length === 0) return;

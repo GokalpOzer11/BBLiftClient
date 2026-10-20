@@ -39,7 +39,7 @@ public class ExercisesController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateExerciseRequest request)
     {
-        ModelState.Clear(); // doğrulamayı API yapıyor
+        ModelState.Clear();
 
         request = request with
         {
