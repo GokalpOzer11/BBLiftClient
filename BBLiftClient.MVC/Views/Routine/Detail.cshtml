@@ -56,7 +56,6 @@ var allExercises = ViewBag.Exercises as IEnumerable<BBLiftClient.Application.Dto
                         @{ int order = 1; }
                         @foreach (var rEx in Model.Exercises ?? new List<BBLiftClient.Application.Dtos.RoutineExerciseResponse>())
                         {
-                        <!-- Exercise Card -->
                         <div class="group relative bg-surface-container/80 hover:bg-surface-container-high/90 backdrop-blur-md rounded-xl p-space-md transition-all shadow-md border border-white/5"
                              data-row
                              data-id="@rEx.Id"
@@ -131,7 +130,6 @@ var allExercises = ViewBag.Exercises as IEnumerable<BBLiftClient.Application.Dto
                             </span>
                         </div>
 
-                        <!-- Arama -->
                         <div class="relative w-full">
                             <span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
                             <input type="text" id="library-search" onkeyup="filterLibrary()" placeholder="Egzersiz ara..." class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary transition-all border border-white/5">
@@ -178,7 +176,6 @@ var allExercises = ViewBag.Exercises as IEnumerable<BBLiftClient.Application.Dto
 <script>
     const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
 
-    // Ortak POST yardımcısı: oturum düşmüşse (giriş sayfasına yönlendirme) net hata verir
     async function sendJson(url, payload) {
         let response;
         try {
@@ -271,7 +268,6 @@ var allExercises = ViewBag.Exercises as IEnumerable<BBLiftClient.Application.Dto
         const panel = document.getElementById('add-panel-' + exId);
         if (!panel) return;
 
-        // Boş alanları varsayılan değerlerle doldur: sadece Kaydet'e basmak yeterli olsun
         const defaults = { sets: 3, reps: 10, weight: 0, rest: 90 };
         for (const [key, value] of Object.entries(defaults)) {
             const input = document.getElementById(key + '-' + exId);

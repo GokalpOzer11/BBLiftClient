@@ -54,7 +54,6 @@ public class RoutineController : Controller
         }
     }
 
-    // ---------- Liste ----------
 
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -66,7 +65,6 @@ public class RoutineController : Controller
         return View(routines ?? new List<RoutineResponse>());
     }
 
-    // ---------- Oluştur (rutin + egzersizler tek sayfada) ----------
 
     [HttpGet]
     public async Task<IActionResult> Create()
@@ -112,7 +110,6 @@ public class RoutineController : Controller
 
         var routineId = routineResult.Data.Id;
 
-        // Sıra korunsun diye egzersizleri tek tek, sırayla ekliyoruz
         var errors = new List<string>();
         foreach (var e in exercises!)
         {
@@ -135,7 +132,6 @@ public class RoutineController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // ---------- Sil ----------
 
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
@@ -150,7 +146,6 @@ public class RoutineController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // ---------- Detay / Düzenleme ----------
 
     [HttpGet]
     public async Task<IActionResult> Detail(Guid id)

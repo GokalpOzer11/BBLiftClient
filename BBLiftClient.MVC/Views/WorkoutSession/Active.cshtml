@@ -132,7 +132,6 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
                 </div>
 
                 <div class="lg:col-span-4 flex flex-col gap-space-lg lg:sticky lg:top-48">
-                    <!-- RIR FAST GUIDE -->
                     <div class="bg-surface-container rounded-xl p-space-lg shadow-xl border border-white/5">
                         <div class="flex items-center justify-between mb-space-sm">
                             <div class="flex items-center gap-space-xs">
@@ -215,7 +214,6 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
 
 @section Scripts {
 <script>
-    // --- İSİM DEĞİŞTİRME FONKSİYONLARI ---
     function enableSessionNameEdit() {
         const display = document.getElementById('sessionNameDisplay');
         const input = document.getElementById('sessionNameInput');
@@ -277,7 +275,6 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
         display.classList.remove('opacity-0');
     }
 
-    // --- KRONOMETRE ---
     let seconds = 0;
     const timerEl = document.getElementById('session-timer');
     let timerInterval = setInterval(updateTimer, 1000);
@@ -290,7 +287,6 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
         if (timerEl) timerEl.textContent = `${hrs}:${mins}:${secs}`;
     }
 
-    // --- MODAL ---
     const modal = document.getElementById('exerciseModal');
     const modalContent = document.getElementById('exerciseModalContent');
 
@@ -320,7 +316,6 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
         });
     }
 
-    // --- EGZERSİZ VE SET YÖNETİMİ ---
     let exCounter = 0;
     function addExerciseToSession(id, name) {
         closeExerciseModal();
@@ -369,7 +364,6 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
         addSetRow(exCounter, id);
     }
 
-    // defaults (isteğe bağlı): { weight, reps, rir } -> önceki antrenmandan gelen hazır değerler
     function addSetRow(cardId, exerciseId, defaults) {
         const tbody = document.getElementById(`tbody-${cardId}`);
         const setIndex = tbody.children.length + 1;
@@ -467,10 +461,8 @@ var prefillExercises = ViewBag.Prefill as IEnumerable<BBLiftClient.MVC.Models.Pr
         }
     }
 
-    // --- ÖNCEKİ ANTRENMANDAN / RUTİNDEN GELEN HAZIR EGZERSİZLER ---
     const prefillData = @Json.Serialize(prefillExercises);
 
-    // JSON anahtarları PascalCase ya da camelCase gelebilir, ikisini de oku
     function pick(obj, name) {
         if (!obj) return undefined;
         const camel = name.charAt(0).toLowerCase() + name.slice(1);

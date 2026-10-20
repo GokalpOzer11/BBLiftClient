@@ -17,7 +17,6 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
 
-                <!-- SOL: Rutin ve seçilen egzersizler -->
                 <section class="lg:col-span-7 flex flex-col gap-space-lg">
 
                     <div class="bg-surface-container-low/90 backdrop-blur-xl rounded-xl p-space-lg shadow-xl shadow-black/40 flex flex-col gap-space-md">
@@ -83,7 +82,6 @@
                     </div>
                 </section>
 
-                <!-- SAĞ: Egzersiz havuzu -->
                 <aside class="lg:col-span-5 flex flex-col gap-space-md">
                     <div class="sticky top-20 bg-surface-container-low/95 backdrop-blur-2xl rounded-xl p-space-md shadow-2xl flex flex-col gap-space-md">
 
@@ -152,7 +150,6 @@
     const statVolume = document.getElementById('stat-volume');
     const headerCount = document.getElementById('header-count');
 
-    // Havuzdaki egzersizleri sayfadan oku
     const library = new Map();
     document.querySelectorAll('[data-exercise]').forEach(el => {
         library.set(el.dataset.id.toLowerCase(), {
@@ -164,7 +161,6 @@
         });
     });
 
-    // Doğrulama hatasıyla sayfa yeniden geldiyse seçilenleri geri yükle
     let selected = [];
     try {
         const parsed = JSON.parse(hidden.value || '[]');
@@ -252,7 +248,6 @@
         updateStats();
     }
 
-    // Havuzdan ekle
     document.getElementById('library-list').addEventListener('click', function (e) {
         const addBtn = e.target.closest('[data-add]');
         if (!addBtn) return;
@@ -262,7 +257,6 @@
         render();
     });
 
-    // Sıra değiştir / sil
     list.addEventListener('click', function (e) {
         const actionBtn = e.target.closest('[data-action]');
         if (!actionBtn) return;
@@ -280,7 +274,6 @@
         render();
     });
 
-    // Set / ağırlık / tekrar / dinlenme değişince state'i güncelle
     list.addEventListener('input', function (e) {
         const input = e.target.closest('[data-field]');
         if (!input) return;
@@ -295,7 +288,6 @@
         updateStats();
     });
 
-    // Arama
     search.addEventListener('input', function () {
         const q = search.value.trim().toLocaleLowerCase('tr-TR');
         let visible = 0;
@@ -318,7 +310,6 @@
         }
     });
 
-    // Gönderirken listeyi hidden alana yaz
     form.addEventListener('submit', function () {
         hidden.value = JSON.stringify(selected.map(x => ({
             exerciseId: x.exerciseId,

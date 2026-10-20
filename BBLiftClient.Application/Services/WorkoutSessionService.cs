@@ -102,7 +102,6 @@ public class WorkoutSessionService(IHttpClientFactory factory)
         return Result.Success();
     }
 
-    // Gerekirse kullanmak için silme metodu
     public async Task<Result> DeleteAsync(Guid id)
     {
         var response = await client.DeleteAsync($"{ApiPath}/{id}");

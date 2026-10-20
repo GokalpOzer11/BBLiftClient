@@ -9,15 +9,11 @@ public class FavoriteExerciseService(IHttpClientFactory factory)
 {
     private const string ApiPath = "api/favorite-exercises";
 
-    // Kullanıcının tüm favori egzersizlerini listelemek için
     public async Task<IEnumerable<FavoriteExerciseResponse>> GetAllAsync()
     {
-        // Not: Eğer API tarafında UserId'ye göre filtrelemek için query parametresi 
-        // veya path gerekiyorsa burayı GetAsync<...>(Path.Combine(ApiPath, "user", userId)) şeklinde güncelleyebilirsin.
         return await GetAsync<IEnumerable<FavoriteExerciseResponse>>(ApiPath) ?? [];
     }
 
-    // İlgili favori kaydının detayını getirmek için
     public async Task<FavoriteExerciseResponse?> GetByIdAsync(Guid id)
     {
         var path = Path.Combine(ApiPath, id.ToString());
@@ -25,7 +21,6 @@ public class FavoriteExerciseService(IHttpClientFactory factory)
         return await GetAsync<FavoriteExerciseResponse?>(path);
     }
 
-    // Egzersizi favorilere eklemek için
     public async Task<Result> CreateAsync(CreateFavoriteExerciseRequest request)
     {
         var response = await client.PostAsJsonAsync(ApiPath, request);
@@ -36,7 +31,6 @@ public class FavoriteExerciseService(IHttpClientFactory factory)
         return Result.Success();
     }
 
-    // Egzersizi favorilerden çıkarmak için
     public async Task<Result> DeleteAsync(Guid id)
     {
         var path = Path.Combine(ApiPath, id.ToString());

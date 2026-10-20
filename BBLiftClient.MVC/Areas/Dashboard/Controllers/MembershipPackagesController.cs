@@ -12,7 +12,6 @@ namespace BBLiftClient.MVC.Areas.Dashboard.Controllers;
 public class MembershipPackagesController(MembershipPackageService service)
     : Controller
 {
-    // Tarayıcı sayıyı her zaman "." ile gönderir; sunucunun kültüründen etkilenmesin diye elle okuyoruz
     private decimal ReadPrice(decimal fallback)
     {
         var raw = Request.Form["Price"].ToString().Replace(',', '.');

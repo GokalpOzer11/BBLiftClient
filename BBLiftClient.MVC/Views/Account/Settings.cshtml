@@ -4,19 +4,15 @@ Layout = "_Layout";
 var profile = ViewBag.Profile as BBLiftClient.Application.Dtos.UserProfileResponse;
 }
 
-<!-- Alt menünün (Antrenman) arkasında içerik kalmaması için pb-32 (padding-bottom) eklendi -->
 <div class="flex flex-col w-full min-h-screen pb-32">
 
-    <!-- Dikey kaydırmanın kilitlenmemesi için overflow-hidden yerine overflow-x-hidden kullanıldı -->
     <div class="relative w-full overflow-x-hidden">
 
-        <!-- Arka Plan Parlama Efektleri -->
         <div class="absolute -top-32 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute top-48 right-12 w-80 h-80 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-gutter-mobile lg:px-gutter py-space-lg w-full mt-8 relative z-10">
 
-            <!-- Breadcrumb & Page Header -->
             <section class="flex flex-col gap-space-xs mb-space-xl">
                 <div class="flex items-center gap-space-xs font-label-ui text-label-ui text-on-surface-variant">
                     <a href="/Account/Profile" class="hover:text-primary transition-colors flex items-center gap-1">
@@ -35,7 +31,6 @@ var profile = ViewBag.Profile as BBLiftClient.Application.Dtos.UserProfileRespon
                         <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Hesap ve Profil Ayarları</h1>
                         <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-1">Kişisel bilgilerini, boy ve kilonu ve şifreni buradan yönet.</p>
                     </div>
-                    <!-- Quick Athlete Summary Chip -->
                     <div class="flex items-center gap-space-sm bg-surface-container-low p-space-sm rounded-xl shadow-md border border-white/5">
                         <div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
                             <span class="material-symbols-outlined text-[24px]">vital_signs</span>
@@ -49,7 +44,6 @@ var profile = ViewBag.Profile as BBLiftClient.Application.Dtos.UserProfileRespon
                 </div>
             </section>
 
-            <!-- Hata Mesajları Alanı -->
             @if (!ViewData.ModelState.IsValid)
             {
             <div class="mb-space-lg p-space-sm bg-error-container text-on-error-container rounded-lg font-body-sm text-body-sm shadow-md">
@@ -57,13 +51,10 @@ var profile = ViewBag.Profile as BBLiftClient.Application.Dtos.UserProfileRespon
             </div>
             }
 
-            <!-- Layout Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
 
-                <!-- Main Form Column (8 cols) -->
                 <div class="lg:col-span-8 flex flex-col gap-space-lg">
 
-                    <!-- Section 1: Biometrics & Profile Card -->
                     <section class="bg-surface-container-low/90 backdrop-blur-xl rounded-xl p-space-lg shadow-xl relative overflow-hidden border border-white/5">
                         <div class="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-primary via-primary-container to-transparent"></div>
 
@@ -136,7 +127,6 @@ var profile = ViewBag.Profile as BBLiftClient.Application.Dtos.UserProfileRespon
                         </form>
                     </section>
 
-                    <!-- Section 2: Password & Security -->
                     <section class="bg-surface-container-low/90 backdrop-blur-xl rounded-xl p-space-lg shadow-xl relative overflow-hidden border border-white/5">
                         <div class="flex items-center gap-space-sm pb-space-md mb-space-md bg-surface-container-lowest/40 -mx-space-lg px-space-lg pt-1">
                             <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary border border-white/5">
@@ -198,7 +188,6 @@ var profile = ViewBag.Profile as BBLiftClient.Application.Dtos.UserProfileRespon
                     </section>
                 </div>
 
-                <!-- Sidebar / Telemetry Column (4 cols) -->
                 <div class="lg:col-span-4 flex flex-col gap-space-lg">
                     <div class="bg-surface-container-low/90 backdrop-blur-xl rounded-xl p-space-lg shadow-xl relative overflow-hidden flex flex-col items-center text-center border border-white/5">
                         <div class="relative mb-space-md group">
